@@ -1,0 +1,47 @@
+# Build artifacts
+*.ipk
+*.tar.gz
+
+# Temporary files
+*.tmp
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (if any)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker volumes
+.docker/
+
+# Local development files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Screenshots for documentation
+screenshots/
+
+# Submission files (update URLs before submission)
+factory-diagnostic.yml
+com.factory.diagnostic.manifest.json
+SUBMISSION_CHECKLIST.md

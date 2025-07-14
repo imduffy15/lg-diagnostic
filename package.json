@@ -1,0 +1,84 @@
+{
+  "name": "lg-diagnostic-tools",
+  "version": "1.0.0",
+  "description": "LG Diagnostic Tools for webOS",
+  "main": "index.html",
+  "scripts": {
+    "build": "./build.sh",
+    "semantic-release": "semantic-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/imduffy15/lg-diagnostic.git"
+  },
+  "keywords": [
+    "webos",
+    "lg",
+    "diagnostic",
+    "tv"
+  ],
+  "author": "Ian Duffy",
+  "license": "MIT",
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^10.0.6",
+    "semantic-release": "^23.0.8"
+  },
+  "release": {
+    "branches": [
+      "main",
+      "master"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "sed -i 's/\"version\": \".*\"/\"version\": \"${nextRelease.version}\"/' appinfo.json"
+        }
+      ],
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "./build.sh"
+        }
+      ],
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "IPK_FILE=$(find . -name '*.ipk' -type f | head -n 1) && SHA256=$(sha256sum \"$IPK_FILE\" | cut -d' ' -f1) && cat > manifest.json << EOF\n{\n  \"id\": \"ie.ianduffy.lg-diagnostic\",\n  \"version\": \"${nextRelease.version}\",\n  \"type\": \"web\",\n  \"title\": \"LG Diagnostic Tools\",\n  \"appDescription\": \"A webOS application for launching LG TV diagnostic modes. WARNING: Use at your own risk!\",\n  \"iconUri\": \"https://raw.githubusercontent.com/imduffy15/lg-diagnostic/main/icon.png\",\n  \"sourceUrl\": \"https://github.com/imduffy15/lg-diagnostic\",\n  \"rootRequired\": false,\n  \"ipkUrl\": \"https://github.com/imduffy15/lg-diagnostic/releases/download/v${nextRelease.version}/ie.ianduffy.lg-diagnostic_${nextRelease.version}_all.ipk\",\n  \"ipkHash\": {\n    \"sha256\": \"$SHA256\"\n  }\n}\nEOF"
+        }
+      ],
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            {
+              "path": "ie.ianduffy.lg-diagnostic_*.ipk",
+              "label": "webOS IPK Package"
+            },
+            {
+              "path": "manifest.json",
+              "label": "webOS Homebrew Manifest"
+            }
+          ]
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "appinfo.json",
+            "CHANGELOG.md",
+            "manifest.json"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
+    ]
+  }
+}

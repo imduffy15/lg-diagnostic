@@ -1,0 +1,20 @@
+{
+  "id": "ie.ianduffy.lg-diagnostic",
+  "version": "1.0.0",
+  "vendor": "Ian Duffy",
+  "type": "web",
+  "main": "index.html",
+  "title": "LG Diagnostic Tools",
+  "icon": "icon.png",
+  "uiRevision": 2,
+  "requestedPermissions": [
+    "time.query",
+    "activities.manage",
+    "application.operation"
+  ],
+  "requiredPermissions": [
+    "time.query",
+    "activities.manage",
+    "application.operation"
+  ]
+}

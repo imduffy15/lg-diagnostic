@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LG Diagnostic Tools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>LG Diagnostic Tools</h1>
+        
+        <div class="warning-box">
+            <h2>⚠️ WARNING</h2>
+            <p>These are factory diagnostic tools that can modify your TV's settings.</p>
+            <p><strong>Use at your own risk!</strong> These tools may void your warranty or cause permanent damage to your TV.</p>
+            <p>If prompted for a password, try: <strong>0413</strong></p>
+        </div>
+        
+        <div class="button-grid">
+            <button class="diagnostic-btn" data-key="inStart">
+                <span class="btn-title">In Start</span>
+                <span class="btn-description">Opens Service Menu 2</span>
+            </button>
+            <button class="diagnostic-btn" data-key="inStop">
+                <span class="btn-title">In Stop</span>
+                <span class="btn-description">⚠️ Factory Reset - Resets all settings!</span>
+            </button>
+            <button class="diagnostic-btn" data-key="pCheck">
+                <span class="btn-title">Picture Check</span>
+                <span class="btn-description">Override picture settings for LCD testing</span>
+            </button>
+            <button class="diagnostic-btn" data-key="sCheck">
+                <span class="btn-title">Sound Check</span>
+                <span class="btn-description">Boost sound volume for audio testing</span>
+            </button>
+            <button class="diagnostic-btn" data-key="tilt">
+                <span class="btn-title">Tilt Adjustment</span>
+                <span class="btn-description">⚠️ White screen, locks remote (reboot required)</span>
+            </button>
+            <button class="diagnostic-btn" data-key="ezAdjust">
+                <span class="btn-title">EZ Adjust</span>
+                <span class="btn-description">Opens Service Menu 1</span>
+            </button>
+            <button class="diagnostic-btn" data-key="powerOnly">
+                <span class="btn-title">Power Only</span>
+                <span class="btn-description">Power-related diagnostic tests</span>
+            </button>
+        </div>
+        <div class="status">
+            <p id="statusText">Ready</p>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

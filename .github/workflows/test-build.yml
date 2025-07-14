@@ -1,0 +1,125 @@
+name: Test Build
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Test build process
+      run: |
+        chmod +x build.sh
+        ./build.sh
+        
+    - name: Verify IPK was created
+      run: |
+        ls -la *.ipk
+        IPK_FILE=$(find . -name "*.ipk" -type f | head -n 1)
+        if [ -z "$IPK_FILE" ]; then
+          echo "Error: No IPK file found"
+          exit 1
+        fi
+        echo "✅ IPK file created: $IPK_FILE"
+        
+    - name: Validate appinfo.json
+      run: |
+        if ! command -v jq &> /dev/null; then
+          sudo apt-get update && sudo apt-get install -y jq
+        fi
+        
+        # Validate JSON syntax
+        if ! jq . appinfo.json > /dev/null; then
+          echo "Error: Invalid JSON in appinfo.json"
+          exit 1
+        fi
+        
+        # Check required fields
+        REQUIRED_FIELDS=("id" "version" "title" "main" "type")
+        for field in "${REQUIRED_FIELDS[@]}"; do
+          if ! jq -e ".$field" appinfo.json > /dev/null; then
+            echo "Error: Missing required field '$field' in appinfo.json"
+            exit 1
+          fi
+        done
+        
+        echo "✅ appinfo.json is valid"
+        
+    - name: Check file permissions
+      run: |
+        if [ ! -x "build.sh" ]; then
+          echo "Error: build.sh is not executable"
+          exit 1
+        fi
+        
+        if [ ! -f "index.html" ]; then
+          echo "Error: index.html is missing"
+          exit 1
+        fi
+        
+        if [ ! -f "app.js" ]; then
+          echo "Error: app.js is missing"
+          exit 1
+        fi
+        
+        if [ ! -f "style.css" ]; then
+          echo "Error: style.css is missing"
+          exit 1
+        fi
+        
+        if [ ! -f "icon.png" ]; then
+          echo "Error: icon.png is missing"
+          exit 1
+        fi
+        
+        echo "✅ All required files are present"
+        
+    - name: Test manifest generation
+      run: |
+        IPK_FILE=$(find . -name "*.ipk" -type f | head -n 1)
+        SHA256=$(sha256sum "$IPK_FILE" | cut -d' ' -f1)
+        
+        cat > test-manifest.json << EOF
+        {
+          "id": "ie.ianduffy.lg-diagnostic",
+          "version": "1.0.0",
+          "type": "web",
+          "title": "LG Diagnostic Tools",
+          "appDescription": "A webOS application for launching LG TV diagnostic modes. WARNING: Use at your own risk!",
+          "iconUri": "https://raw.githubusercontent.com/test/lg-factory-diagnostic/main/icon.png",
+          "sourceUrl": "https://github.com/test/lg-factory-diagnostic",
+          "rootRequired": false,
+          "ipkUrl": "https://github.com/test/lg-diagnostic/releases/download/v1.0.0/ie.ianduffy.lg-diagnostic_1.0.0_all.ipk",
+          "ipkHash": {
+            "sha256": "$SHA256"
+          }
+        }
+        EOF
+        
+        # Validate manifest JSON
+        if ! jq . test-manifest.json > /dev/null; then
+          echo "Error: Generated manifest is invalid JSON"
+          exit 1
+        fi
+        
+        echo "✅ Manifest generation test passed"
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: |
+          *.ipk
+          appinfo.json
+          test-manifest.json
+        retention-days: 7
