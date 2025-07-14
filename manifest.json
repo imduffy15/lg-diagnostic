@@ -1,0 +1,14 @@
+{
+  "id": "ie.ianduffy.lg-diagnostic",
+  "version": "1.0.0",
+  "type": "web",
+  "title": "LG Diagnostic Tools",
+  "appDescription": "A webOS application for launching LG TV diagnostic modes. WARNING: Use at your own risk!",
+  "iconUri": "https://raw.githubusercontent.com/imduffy15/lg-diagnostic/main/icon.png",
+  "sourceUrl": "https://github.com/imduffy15/lg-diagnostic",
+  "rootRequired": false,
+  "ipkUrl": "https://github.com/imduffy15/lg-diagnostic/releases/download/v1.0.0/ie.ianduffy.lg-diagnostic_1.0.0_all.ipk",
+  "ipkHash": {
+    "sha256": "3de0db09e5da67079425ef160d9f5ecbf760d19c2ad8986776a797bfb6f691ed"
+  }
+}
